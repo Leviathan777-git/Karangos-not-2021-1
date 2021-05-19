@@ -15,6 +15,7 @@ const theme = createMuiTheme({
     type: 'dark',
     primary: {
       main: yellow[500],
+
     },
     secondary: {
       main: pink[500],
@@ -26,6 +27,7 @@ const useStyles = makeStyles((theme) => ({
   box: {
     backgroundColor: theme.palette.background.default,
     minHeight: '100vh',
+    paddingBottom: '42px',
   },
   routed: {
     padding: '24px',

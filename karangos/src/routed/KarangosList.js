@@ -14,9 +14,13 @@ import IconButton from '@material-ui/core/IconButton';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Toolbar from '@material-ui/core/Toolbar';
-import Button from '@material-ui/core/Button'
+import Button from '@material-ui/core/Button';
 import AddBoxIcon from '@material-ui/icons/AddBox';
-import {useHistory} from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
+import ConfirmDialog from '../ui/ConfirmDialog';
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
+
 
 const useStyles = makeStyles((theme) => ({
     table: {
@@ -49,27 +53,80 @@ export default function KarangosList() {
     const history = useHistory();
 
     const [karangos, setKarangos] = useState([])
+    const [dialogOpen, setDialogOpen] = useState(false)
+    const [deletable, setDeletable] = useState()
+    const [snackState, setSnackState] = useState({
+        open: false,
+        severity: 'success',
+        message: 'Kanrangos ecluido com sucesso'
+    })
+
+    function handleDialogClose(result) {
+        setDialogOpen(false)
+        if (result) deleteItem()
+    }
+
+    function handleDeleteClick(id) {
+        setDeletable(id)
+        setDialogOpen(true)
+    }
+
+    async function deleteItem() {
+        try {
+            await axios.delete(`https://api.faustocintra.com.br/karangos/${deletable}`)
+            getData()
+            setSnackState({...snackState, open: true})
+        }
+        catch (error) {
+            setSnackState({
+                open: true,
+                severity: 'error',
+                message: 'ERRO: ' + error.message
+            })
+        }
+    }
+
+    async function getData() {
+        try {
+            let response = await axios.get('https://api.faustocintra.com.br/karangos') // ?by=marca,modelo // para organizar
+            if (response.data.length > 0) setKarangos(response.data)
+        }
+        catch (error) {
+            console.error(error);
+        }
+    }
 
     useEffect(() => {
-        const getData = async () => {
-            try {
-                let response = await axios.get('https://api.faustocintra.com.br/karangos?by=marca,modelo')
-                setKarangos(response.data)
-            }
-            catch (error) {
-                console.error(error);
-            }
-        }
         getData()
 
     }, [])  // quando a dependencia de um useEffect é um vetor zaio, isso indica que ele sera executado apenas
     // uma vez, na inicializção do componente
 
+    function Alert(props) {
+        return <MuiAlert elevation={6} variant="filled" {...props} />;
+    }
+
+    function handleSnackClose(event, reason){
+        if(reason === 'clickaway') return
+        setSnackState({...snackState, open: false})
+    }
+
     return (
         <>
+            <ConfirmDialog isOpen={dialogOpen} onClose={handleDialogClose}>
+                Deseja realmente excluir este Karango?
+            </ConfirmDialog>
+
+            <Snackbar open={snackState.open} autoHideDuration={6000} onClose={handleSnackClose}>
+                <Alert onClose={handleSnackClose} severity={snackState.severity}>
+                    {snackState.message}
+                </Alert>
+            </Snackbar> 
+
             <h1> Listagem de Karangos </h1>
+
             <Toolbar className={classes.toolbar}>
-                <Button color="secondary" variant="contained" size="large" startIcon={<AddBoxIcon />} onClick={() => history.push("/new") } >
+                <Button color="secondary" variant="contained" size="large" startIcon={<AddBoxIcon />} onClick={() => history.push("/new")} >
                     Novo Karango
                 </Button>
             </Toolbar>
@@ -112,7 +169,7 @@ export default function KarangosList() {
                                         </IconButton>
                                     </TableCell>
                                     <TableCell align='center'>
-                                        <IconButton aria-label="delete">
+                                        <IconButton aria-label="delete" onClick={() => handleDeleteClick(karango.id)}>
                                             <DeleteIcon color="error" />
                                         </IconButton>
                                     </TableCell>
