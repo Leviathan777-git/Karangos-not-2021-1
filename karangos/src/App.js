@@ -6,7 +6,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import yellow from '@material-ui/core/colors/yellow';
 import pink from '@material-ui/core/colors/pink';
-import KarangosList from './routed/KarangosList';
+import KarangosList from './routed/KarangosList2';
 import KarangosForm from './routed/KarangosForm';
 import { BrowserRouter, Route, Switch } from 'react-router-dom'
 
