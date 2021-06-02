@@ -45,20 +45,22 @@ export default function KarangosList() {
   const [sbOpen, setSbOpen] = useState(false)
   const [sbSeverity, setSbSeverity] = useState('success')
   const [sbMessage, setSbMessage] = useState('Exclusão realizada com sucesso.')
-
+  
   const history = useHistory()
 
   useEffect(() => {
+    
     getData()
+
   }, []) // Quando a lista de dependências é um vetor vazio, o useEffect()
-  // é executado apenas uma vez, no carregamento inicial do componente
+         // é executado apenas uma vez, no carregamento inicial do componente
 
   async function getData() {
     try { // tenta buscar os dados
       let response = await axios.get('https://api.faustocintra.com.br/karangos?by=marca,modelo')
-      if (response.data.length > 0) setKarangos(response.data)
+      if(response.data.length > 0) setKarangos(response.data)
     }
-    catch (error) {
+    catch(error) {
       console.error(error)
     }
   }
@@ -70,7 +72,7 @@ export default function KarangosList() {
       setSbSeverity('success')
       setSbMessage('Exclusão efetuada com sucesso.')
     }
-    catch (error) {
+    catch(error) {
       setSbSeverity('error')
       setSbMessage('ERRO: ' + error.message)
     }
@@ -81,7 +83,7 @@ export default function KarangosList() {
     setDialogOpen(false)
 
     // Se o usuário concordou com a exclusão 
-    if (result) deleteItem()
+    if(result) deleteItem()
   }
 
   function handleDelete(id) {
@@ -94,85 +96,85 @@ export default function KarangosList() {
   }
 
   const columns = [
-    {
-      field: 'id',
+    { 
+      field: 'id', 
       headerName: 'Cód.',
       align: 'right',
-      headerAlign: 'right',
+      headerAlign: 'right',  
       flex: true,
-      //disableColumnMenu: true, //para disabilitar o menu da coluna
+      disableColumnMenu: true,
       sortComparator: (v1, v2) => Number(v1) > Number(v2) ? 1 : -1
     },
-    {
-      field: 'marca',
+    { 
+      field: 'marca', 
       headerName: 'Marca',
-      flex: true
+      flex: true 
     },
-    {
-      field: 'modelo',
+    { 
+      field: 'modelo', 
       headerName: 'Modelo',
-      flex: true
+      flex: true 
     },
-    {
-      field: 'cor',
+    { 
+      field: 'cor', 
       headerName: 'Cor',
       align: 'center',
-      headerAlign: 'center',
-      flex: true
+      headerAlign: 'center', 
+      flex: true 
     },
-    {
-      field: 'ano_fabricacao',
+    { 
+      field: 'ano_fabricacao', 
       headerName: 'Ano',
       align: 'center',
-      headerAlign: 'center',
+      headerAlign: 'center', 
       flex: true,
-      sortComparator: (v1, v2) => Number(v1) > Number(v2) ? 1 : -1
+      sortComparator: (v1, v2) => Number(v1) > Number(v2) ? 1 : -1 
     },
-    {
-      field: 'importado',
+    { 
+      field: 'importado', 
       headerName: 'Importado?',
-      align: 'center',
-      headerAlign: 'center',
+      align: 'center', 
+      headerAlign: 'center', 
       flex: true,
       renderCell: params => (
         <Checkbox checked={params.value === "1"} readOnly />
       )
     },
-    {
-      field: 'placa',
+    { 
+      field: 'placa', 
       headerName: 'Placa',
-      align: 'center',
-      headerAlign: 'center',
-      flex: true
+      align: 'center', 
+      headerAlign: 'center', 
+      flex: true 
     },
-    {
-      field: 'preco',
+    { 
+      field: 'preco', 
       headerName: 'Preço',
-      align: 'right',
-      headerAlign: 'right',
+      align: 'right', 
+      headerAlign: 'right', 
       flex: true,
       valueFormatter: params => (
         Number(params.value).toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })
       ),
       sortComparator: (v1, v2) => Number(v1) > Number(v2) ? 1 : -1
     },
-    {
+    { 
       field: 'editar',
       headerName: 'Editar',
-      align: 'center',
-      headerAlign: 'center',
+      align: 'center', 
+      headerAlign: 'center', 
       flex: true,
       renderCell: params => (
-        <IconButton aria-label="editar">
+        <IconButton aria-label="editar" onClick={() => history.push(`/edit/${params.id}`)}>
           <EditIcon />
         </IconButton>
       )
     },
-    {
+    { 
       field: 'excluir',
       headerName: 'Excluir',
-      align: 'center',
-      headerAlign: 'center',
+      align: 'center', 
+      headerAlign: 'center', 
       flex: true,
       renderCell: params => (
         <IconButton aria-label="excluir" onClick={() => handleDelete(params.id)}>
@@ -187,23 +189,22 @@ export default function KarangosList() {
       <ConfirmDialog isOpen={dialogOpen} onClose={handleDialogClose}>
         Deseja realmente excluir este karango?
       </ConfirmDialog>
-
+      
       <Snackbar open={sbOpen} autoHideDuration={6000} onClose={handleSbClose}>
         <MuiAlert elevation={6} variant="filled" onClose={handleSbClose} severity={sbSeverity}>
           {sbMessage}
         </MuiAlert>
       </Snackbar>
-
+      
       <h1>Listagem de Karangos</h1>
       <Toolbar className={classes.toolbar}>
-        <Button color="secondary" variant="contained" size="large"
+        <Button color="secondary" variant="contained" size="large" 
           startIcon={<AddBoxIcon />} onClick={() => history.push('/new')}>
           Novo Karango
         </Button>
       </Toolbar>
       <Paper elevation={4}>
-        <DataGrid className={classes.dataGrid} rows={karangos} columns={columns}
-          pageSize={10} autoHeight={true} disableSelectionOnClick={true} />
+        <DataGrid className={classes.dataGrid} rows={karangos} columns={columns} pageSize={10} autoHeight={true} disableSelectionOnClick={true} />
       </Paper>
     </>
   )
