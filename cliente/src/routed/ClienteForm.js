@@ -429,7 +429,7 @@ export default function ClienteForm() {
           <MenuItem value="MA">Maranhão</MenuItem>
           <MenuItem value="MT">Mato Grosso</MenuItem>
           <MenuItem value="MS">Mato Grosso do Sul</MenuItem>
-          <MenuItem value="MG"> Minas Gerais</MenuItem>
+          <MenuItem value="MG">Minas Gerais</MenuItem>
           <MenuItem value="PA">Pará</MenuItem>
           <MenuItem value="PB">Paraíba</MenuItem>
           <MenuItem value="PR">Paraná</MenuItem>
