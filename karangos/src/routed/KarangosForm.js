@@ -71,7 +71,7 @@ export default function KarangosForm() {
     placa: '',
     preco: 0
   })
-  const [currentId, setCurrentId] = useState()
+  
   const [importadoChecked, setImportadoChecked] = useState()
 
   const [snackState, setSnackState] = useState({
