@@ -20,7 +20,7 @@ git branch gh-pages  # Cria o branch gh-pages
 cd karangos
 npm run build   # Gera os arquivos de produção em build/
 git checkout gh-pages
-cd build
+origin/gh-pages
 git add -f .
 git commit -m "Mensagem de commit"
 git push origin gh-pages
